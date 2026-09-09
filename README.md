@@ -28,4 +28,4 @@ authors.
 
 The only official repository is:
 
-https://damasofc09.github.io/AIOS
+https://github.com/DamasoFC09/AIOS
