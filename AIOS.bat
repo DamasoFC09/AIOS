@@ -1,49 +1,28 @@
 @echo off
-title AIOS v1
+title AIOS v1.1
 setlocal EnableDelayedExpansion
-set version=1.0
+set version=1.1
 
-cls
+for /f "delims=" %%y in ('date /t') do (
+    set fecha=%%y
+)
+for /f "delims=" %%h in ('time /t') do (
+    set hora=%%h
+)
+
 color 74
-echo  ============================================================================================================
-echo  =                                                                                                          =
-echo  =            AA            IIIIIIIIIIIIIIIIII         OOOOOOOO           SSSSSSSSSSSSSSSSSS                =
-echo  =           AAAA           IIIIIIIIIIIIIIIIII      OOOOOOOOOOOOOO      SSSSSSSSSSSSSSSSSSSS                =
-echo  =          AAAAAA                 IIII            OOOOO      OOOOO     SSS                                 =
-echo  =         AAA  AAA                IIII           OOOOO        OOOOO     SSSS                               =
-echo  =        AAA    AAA               IIII          OOOOO          OOOOO      SSSSSSSSSSSSSS                   =
-echo  =       AAA      AAA              IIII          OOOOO          OOOOO       SSSSSSSSSSSSSSS                 =
-echo  =      AAAAAAAAAAAAAA             IIII           OOOOO        OOOOO                    SSSS                =
-echo  =     AAAAAAAAAAAAAAAA            IIII            OOOOO      OOOOO                      SSS                =
-echo  =    AAA            AAA    IIIIIIIIIIIIIIIIII      OOOOOOOOOOOOOO      SSSSSSSSSSSSSSSSSSSS                =
-echo  =   AAA              AAA   IIIIIIIIIIIIIIIIII         OOOOOOOO         SSSSSSSSSSSSSSSSSS       VER. !version!   =
-echo  =                                                                                                          =
-echo  ============================================================================================================
+call :logos
+echo    BIENVENIDO A AIOS
+echo    ver. !version!
 echo.
-echo  BIENVENIDO A AIOS
-echo  ver. !version!
+echo    - Totalmente de codigo abierto y gratuito.
 echo.
-echo  - Totalmente de codigo abierto y gratuito.
+echo    !fecha! !hora!
+echo.
 pause
 :location
-cls
 color 02
-echo.
-echo  ============================================================================================================
-echo  =                                                                                                          =
-echo  =            AA            IIIIIIIIIIIIIIIIII         OOOOOOOO           SSSSSSSSSSSSSSSSSS                =
-echo  =           AAAA           IIIIIIIIIIIIIIIIII      OOOOOOOOOOOOOO      SSSSSSSSSSSSSSSSSSSS                =
-echo  =          AAAAAA                 IIII            OOOOO      OOOOO     SSS                                 =
-echo  =         AAA  AAA                IIII           OOOOO        OOOOO     SSSS                               =
-echo  =        AAA    AAA               IIII          OOOOO          OOOOO      SSSSSSSSSSSSSS                   =
-echo  =       AAA      AAA              IIII          OOOOO          OOOOO       SSSSSSSSSSSSSSS                 =
-echo  =      AAAAAAAAAAAAAA             IIII           OOOOO        OOOOO                    SSSS                =
-echo  =     AAAAAAAAAAAAAAAA            IIII            OOOOO      OOOOO                      SSS                =
-echo  =    AAA            AAA    IIIIIIIIIIIIIIIIII      OOOOOOOOOOOOOO      SSSSSSSSSSSSSSSSSSSS                =
-echo  =   AAA              AAA   IIIIIIIIIIIIIIIIII         OOOOOOOO         SSSSSSSSSSSSSSSSSS       VER. !version!   =
-echo  =                                                                                                          =
-echo  ============================================================================================================
-echo.
+call :logos
 echo ================= UBICABION ACTUAL ================
 echo "%CD%"
 echo ===================================================
@@ -71,23 +50,13 @@ echo ===================================================
 pause
 
 :ECRM
-cls
-echo.
-echo  ============================================================================================================
-echo  =                                                                                                          =
-echo  =            AA            IIIIIIIIIIIIIIIIII         OOOOOOOO           SSSSSSSSSSSSSSSSSS                =
-echo  =           AAAA           IIIIIIIIIIIIIIIIII      OOOOOOOOOOOOOO      SSSSSSSSSSSSSSSSSSSS                =
-echo  =          AAAAAA                 IIII            OOOOO      OOOOO     SSS                                 =
-echo  =         AAA  AAA                IIII           OOOOO        OOOOO     SSSS                               =
-echo  =        AAA    AAA               IIII          OOOOO          OOOOO      SSSSSSSSSSSSSS                   =
-echo  =       AAA      AAA              IIII          OOOOO          OOOOO       SSSSSSSSSSSSSSS                 =
-echo  =      AAAAAAAAAAAAAA             IIII           OOOOO        OOOOO                    SSSS                =
-echo  =     AAAAAAAAAAAAAAAA            IIII            OOOOO      OOOOO                      SSS                =
-echo  =    AAA            AAA    IIIIIIIIIIIIIIIIII      OOOOOOOOOOOOOO      SSSSSSSSSSSSSSSSSSSS                =
-echo  =   AAA              AAA   IIIIIIIIIIIIIIIIII         OOOOOOOO         SSSSSSSSSSSSSSSSSS       VER. !version!   =
-echo  =                                                                                                          =
-echo  ============================================================================================================
-echo.
+for /f "delims=" %%y in ('date /t') do (
+    set fecha_inicio=%%y
+)
+for /f "delims=" %%h in ('time /t') do (
+    set hora_inicio=%%h
+)
+call :logos
 dir
 color 02
 echo ====================================================================================
@@ -131,9 +100,13 @@ echo /   [5]   LEER                                               /
 echo /                                                            /
 echo /   [6]   UBICACION                                          /
 echo /                                                            /
+echo /   [7]   EJECUTAR                                           /
+echo /                                                            /
 echo /   [0]   SALIR                                              /
 echo /                                                            /
 echo ==============================================================
+echo / !fecha_inicio! !hora_inicio! /
+echo --------------------------------
 set /p eleccion=Comando a ejecutar: 
 
 if "!eleccion!"=="" (
@@ -144,20 +117,20 @@ if "!eleccion!"=="" (
     echo ----------------------------
     pause
     goto ECRM
-) else if !eleccion! GTR 6 (
+) else if !eleccion! GTR 7 (
     color 04
     cls
-    echo ------------------------------------------------------
-    echo   El numero debe ser mayor que cero y menor que siete
-    echo ------------------------------------------------------
+    echo ----------------------------------------------------------------
+    echo    El numero debe ser igual o mayor que cero y menor que ocho
+    echo ----------------------------------------------------------------
     pause
     goto ECRM
 ) else if !eleccion! LSS 0 (
     color 04
     cls
-    echo ---------------------------------------------------------------
-    echo   El numero debe ser igual o mayor que cero y menor que siete
-    echo ---------------------------------------------------------------
+    echo ----------------------------------------------------------------
+    echo    El numero debe ser igual o mayor que cero y menor que ocho
+    echo ----------------------------------------------------------------
     pause
     goto ECRM
 ) else if !eleccion! EQU 1 (
@@ -174,6 +147,8 @@ if "!eleccion!"=="" (
     call :leer_AIOSv02
 ) else if !eleccion! EQU 6 (
     call :ubicacion_AIOSv02
+) else if !eleccion! EQU 7 (
+    call :ejecucion_AIOSv11
 ) else (
     call :error_AIOSv02
     goto ECRM
@@ -229,23 +204,7 @@ exit /b
 
 REM 2. Funcion: ELIMINAR ------------------------------------------------------- ELIMINAR
 :eliminar_AIOSv02
-cls
-echo.
-echo  ============================================================================================================
-echo  =                                                                                                          =
-echo  =            AA            IIIIIIIIIIIIIIIIII         OOOOOOOO           SSSSSSSSSSSSSSSSSS                =
-echo  =           AAAA           IIIIIIIIIIIIIIIIII      OOOOOOOOOOOOOO      SSSSSSSSSSSSSSSSSSSS                =
-echo  =          AAAAAA                 IIII            OOOOO      OOOOO     SSS                                 =
-echo  =         AAA  AAA                IIII           OOOOO        OOOOO     SSSS                               =
-echo  =        AAA    AAA               IIII          OOOOO          OOOOO      SSSSSSSSSSSSSS                   =
-echo  =       AAA      AAA              IIII          OOOOO          OOOOO       SSSSSSSSSSSSSSS                 =
-echo  =      AAAAAAAAAAAAAA             IIII           OOOOO        OOOOO                    SSSS                =
-echo  =     AAAAAAAAAAAAAAAA            IIII            OOOOO      OOOOO                      SSS                =
-echo  =    AAA            AAA    IIIIIIIIIIIIIIIIII      OOOOOOOOOOOOOO      SSSSSSSSSSSSSSSSSSSS                =
-echo  =   AAA              AAA   IIIIIIIIIIIIIIIIII         OOOOOOOO         SSSSSSSSSSSSSSSSSS       VER. !version!   =
-echo  =                                                                                                          =
-echo  ============================================================================================================
-echo.
+call :logos
 echo =================================================
 echo -                                               -
 echo -                   ELIMINAR                    -
@@ -415,23 +374,7 @@ exit /b
 
 REM 3. Funcion: CREAR ------------------------------------------------------- CREAR
 :crear_AIOSv02
-cls
-echo.
-echo  ============================================================================================================
-echo  =                                                                                                          =
-echo  =            AA            IIIIIIIIIIIIIIIIII         OOOOOOOO           SSSSSSSSSSSSSSSSSS                =
-echo  =           AAAA           IIIIIIIIIIIIIIIIII      OOOOOOOOOOOOOO      SSSSSSSSSSSSSSSSSSSS                =
-echo  =          AAAAAA                 IIII            OOOOO      OOOOO     SSS                                 =
-echo  =         AAA  AAA                IIII           OOOOO        OOOOO     SSSS                               =
-echo  =        AAA    AAA               IIII          OOOOO          OOOOO      SSSSSSSSSSSSSS                   =
-echo  =       AAA      AAA              IIII          OOOOO          OOOOO       SSSSSSSSSSSSSSS                 =
-echo  =      AAAAAAAAAAAAAA             IIII           OOOOO        OOOOO                    SSSS                =
-echo  =     AAAAAAAAAAAAAAAA            IIII            OOOOO      OOOOO                      SSS                =
-echo  =    AAA            AAA    IIIIIIIIIIIIIIIIII      OOOOOOOOOOOOOO      SSSSSSSSSSSSSSSSSSSS                =
-echo  =   AAA              AAA   IIIIIIIIIIIIIIIIII         OOOOOOOO         SSSSSSSSSSSSSSSSSS       VER. !version!   =
-echo  =                                                                                                          =
-echo  ============================================================================================================
-echo.
+call :logos
 echo =================================================
 echo -                                               -
 echo -                    CREAR                      -
@@ -555,23 +498,7 @@ exit /b
 
 REM 4. Funcion: RENOMBRAR ------------------------------------------------------- RENOMBRAR
 :renombrar_AIOSv02
-cls
-echo.
-echo  ============================================================================================================
-echo  =                                                                                                          =
-echo  =            AA            IIIIIIIIIIIIIIIIII         OOOOOOOO           SSSSSSSSSSSSSSSSSS                =
-echo  =           AAAA           IIIIIIIIIIIIIIIIII      OOOOOOOOOOOOOO      SSSSSSSSSSSSSSSSSSSS                =
-echo  =          AAAAAA                 IIII            OOOOO      OOOOO     SSS                                 =
-echo  =         AAA  AAA                IIII           OOOOO        OOOOO     SSSS                               =
-echo  =        AAA    AAA               IIII          OOOOO          OOOOO      SSSSSSSSSSSSSS                   =
-echo  =       AAA      AAA              IIII          OOOOO          OOOOO       SSSSSSSSSSSSSSS                 =
-echo  =      AAAAAAAAAAAAAA             IIII           OOOOO        OOOOO                    SSSS                =
-echo  =     AAAAAAAAAAAAAAAA            IIII            OOOOO      OOOOO                      SSS                =
-echo  =    AAA            AAA    IIIIIIIIIIIIIIIIII      OOOOOOOOOOOOOO      SSSSSSSSSSSSSSSSSSSS                =
-echo  =   AAA              AAA   IIIIIIIIIIIIIIIIII         OOOOOOOO         SSSSSSSSSSSSSSSSSS       VER. !version!   =
-echo  =                                                                                                          =
-echo  ============================================================================================================
-echo.
+call :logos
 echo ==========================================================================================
 echo /                              LISTA DE ARCHIVOS Y CARPETAS                              /
 echo.
@@ -598,23 +525,7 @@ exit /b
 
 REM 5. Funcion: MOVER ------------------------------------------------------- MOVER
 :mover_AIOSv02
-cls
-echo.
-echo  ============================================================================================================
-echo  =                                                                                                          =
-echo  =            AA            IIIIIIIIIIIIIIIIII         OOOOOOOO           SSSSSSSSSSSSSSSSSS                =
-echo  =           AAAA           IIIIIIIIIIIIIIIIII      OOOOOOOOOOOOOO      SSSSSSSSSSSSSSSSSSSS                =
-echo  =          AAAAAA                 IIII            OOOOO      OOOOO     SSS                                 =
-echo  =         AAA  AAA                IIII           OOOOO        OOOOO     SSSS                               =
-echo  =        AAA    AAA               IIII          OOOOO          OOOOO      SSSSSSSSSSSSSS                   =
-echo  =       AAA      AAA              IIII          OOOOO          OOOOO       SSSSSSSSSSSSSSS                 =
-echo  =      AAAAAAAAAAAAAA             IIII           OOOOO        OOOOO                    SSSS                =
-echo  =     AAAAAAAAAAAAAAAA            IIII            OOOOO      OOOOO                      SSS                =
-echo  =    AAA            AAA    IIIIIIIIIIIIIIIIII      OOOOOOOOOOOOOO      SSSSSSSSSSSSSSSSSSSS                =
-echo  =   AAA              AAA   IIIIIIIIIIIIIIIIII         OOOOOOOO         SSSSSSSSSSSSSSSSSS       VER. !version!   =
-echo  =                                                                                                          =
-echo  ============================================================================================================
-echo.
+call :logos
 echo ==========================================================================================
 echo /                              LISTA DE ARCHIVOS Y CARPETAS                              /
 echo.
@@ -665,23 +576,7 @@ exit /b
 
 REM 6. Funcion: SALIR ------------------------------------------------------- SALIR
 :salir_AIOSv02
-cls
-echo.
-echo  ============================================================================================================
-echo  =                                                                                                          =
-echo  =            AA            IIIIIIIIIIIIIIIIII         OOOOOOOO           SSSSSSSSSSSSSSSSSS                =
-echo  =           AAAA           IIIIIIIIIIIIIIIIII      OOOOOOOOOOOOOO      SSSSSSSSSSSSSSSSSSSS                =
-echo  =          AAAAAA                 IIII            OOOOO      OOOOO     SSS                                 =
-echo  =         AAA  AAA                IIII           OOOOO        OOOOO     SSSS                               =
-echo  =        AAA    AAA               IIII          OOOOO          OOOOO      SSSSSSSSSSSSSS                   =
-echo  =       AAA      AAA              IIII          OOOOO          OOOOO       SSSSSSSSSSSSSSS                 =
-echo  =      AAAAAAAAAAAAAA             IIII           OOOOO        OOOOO                    SSSS                =
-echo  =     AAAAAAAAAAAAAAAA            IIII            OOOOO      OOOOO                      SSS                =
-echo  =    AAA            AAA    IIIIIIIIIIIIIIIIII      OOOOOOOOOOOOOO      SSSSSSSSSSSSSSSSSSSS                =
-echo  =   AAA              AAA   IIIIIIIIIIIIIIIIII         OOOOOOOO         SSSSSSSSSSSSSSSSSS       VER. !version!   =
-echo  =                                                                                                          =
-echo  ============================================================================================================
-echo.
+call :logos
 echo ==========================================================
 echo -              ESTA SEGURO QUE DESEA SALIR?              -
 echo ==========================================================
@@ -702,23 +597,7 @@ if /i "!salida!"=="si" (
 
 REM 7. Funcion: LEER ------------------------------------------------------- LEER
 :leer_AIOSv02
-cls
-echo.
-echo  ============================================================================================================
-echo  =                                                                                                          =
-echo  =            AA            IIIIIIIIIIIIIIIIII         OOOOOOOO           SSSSSSSSSSSSSSSSSS                =
-echo  =           AAAA           IIIIIIIIIIIIIIIIII      OOOOOOOOOOOOOO      SSSSSSSSSSSSSSSSSSSS                =
-echo  =          AAAAAA                 IIII            OOOOO      OOOOO     SSS                                 =
-echo  =         AAA  AAA                IIII           OOOOO        OOOOO     SSSS                               =
-echo  =        AAA    AAA               IIII          OOOOO          OOOOO      SSSSSSSSSSSSSS                   =
-echo  =       AAA      AAA              IIII          OOOOO          OOOOO       SSSSSSSSSSSSSSS                 =
-echo  =      AAAAAAAAAAAAAA             IIII           OOOOO        OOOOO                    SSSS                =
-echo  =     AAAAAAAAAAAAAAAA            IIII            OOOOO      OOOOO                      SSS                =
-echo  =    AAA            AAA    IIIIIIIIIIIIIIIIII      OOOOOOOOOOOOOO      SSSSSSSSSSSSSSSSSSSS                =
-echo  =   AAA              AAA   IIIIIIIIIIIIIIIIII         OOOOOOOO         SSSSSSSSSSSSSSSSSS       VER. !version!   =
-echo  =                                                                                                          =
-echo  ============================================================================================================
-echo.
+call :logos
 echo ==========================================================
 echo /                    LISTA DE ARCHIVOS                   /
 echo ==========================================================
@@ -745,23 +624,7 @@ exit /b
 
 REM 8. Funcion: UBICACION ------------------------------------------------------- UBICACION
 :ubicacion_AIOSv02
-cls
-echo.
-echo  ============================================================================================================
-echo  =                                                                                                          =
-echo  =            AA            IIIIIIIIIIIIIIIIII         OOOOOOOO           SSSSSSSSSSSSSSSSSS                =
-echo  =           AAAA           IIIIIIIIIIIIIIIIII      OOOOOOOOOOOOOO      SSSSSSSSSSSSSSSSSSSS                =
-echo  =          AAAAAA                 IIII            OOOOO      OOOOO     SSS                                 =
-echo  =         AAA  AAA                IIII           OOOOO        OOOOO     SSSS                               =
-echo  =        AAA    AAA               IIII          OOOOO          OOOOO      SSSSSSSSSSSSSS                   =
-echo  =       AAA      AAA              IIII          OOOOO          OOOOO       SSSSSSSSSSSSSSS                 =
-echo  =      AAAAAAAAAAAAAA             IIII           OOOOO        OOOOO                    SSSS                =
-echo  =     AAAAAAAAAAAAAAAA            IIII            OOOOO      OOOOO                      SSS                =
-echo  =    AAA            AAA    IIIIIIIIIIIIIIIIII      OOOOOOOOOOOOOO      SSSSSSSSSSSSSSSSSSSS                =
-echo  =   AAA              AAA   IIIIIIIIIIIIIIIIII         OOOOOOOO         SSSSSSSSSSSSSSSSSS       VER. !version!   =
-echo  =                                                                                                          =
-echo  ============================================================================================================
-echo.
+call :logos
 echo ========================================================================
 echo /  Ubicacion Actual: "%CD%"                                            
 echo ========================================================================
@@ -782,4 +645,49 @@ echo ========================================================================
         call :error_AIOSv02
         goto ECRM
     )
+exit /b
+
+REM 9. FUNCION: EJECUCION --------------------------------------------------------EJECUCION
+:ejecucion_AIOSv11
+call :logos
+echo ==========================================================================================
+echo /                                   LISTA DE ARCHIVOS                                    /
+echo.
+dir /a-d /b
+echo.
+echo ==========================================================================================
+echo /                                                                                        /
+echo /                                       EJECUTAR                                         /
+echo /                                                                                        /
+echo ==========================================================================================
+echo    Ingrese el nombre del archivo que desea ejecutar junto con su extension
+echo    - Ejecuta solo comandos de texto -
+echo    [Escriba [AIOSexec] para volver al menu principal]
+set /p aioseje=Nombre: 
+if /i "!aioseje!"=="aiosexec" (
+    goto ECRM
+)
+for /f "delims=" %%a in ('!aioseje!') do (
+    echo %%a
+)
+exit /b
+REM 10. FUNCION: AIOS ----------------------------------------------------------------AIOS
+:logos
+cls
+echo.
+echo  ============================================================================================================
+echo  =                                                                                                          =
+echo  =            AA            IIIIIIIIIIIIIIIIII         OOOOOOOO           SSSSSSSSSSSSSSSSSS                =
+echo  =           AAAA           IIIIIIIIIIIIIIIIII      OOOOOOOOOOOOOO      SSSSSSSSSSSSSSSSSSSS                =
+echo  =          AAAAAA                 IIII            OOOOO      OOOOO     SSS                                 =
+echo  =         AAA  AAA                IIII           OOOOO        OOOOO     SSSS                               =
+echo  =        AAA    AAA               IIII          OOOOO          OOOOO      SSSSSSSSSSSSSS                   =
+echo  =       AAA      AAA              IIII          OOOOO          OOOOO       SSSSSSSSSSSSSSS                 =
+echo  =      AAAAAAAAAAAAAA             IIII           OOOOO        OOOOO                    SSSS                =
+echo  =     AAAAAAAAAAAAAAAA            IIII            OOOOO      OOOOO                      SSS                =
+echo  =    AAA            AAA    IIIIIIIIIIIIIIIIII      OOOOOOOOOOOOOO      SSSSSSSSSSSSSSSSSSSS                =
+echo  =   AAA              AAA   IIIIIIIIIIIIIIIIII         OOOOOOOO         SSSSSSSSSSSSSSSSSS       VER. !version!   =
+echo  =                                                                                                          =
+echo  ============================================================================================================
+echo.
 exit /b
