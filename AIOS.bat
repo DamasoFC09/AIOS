@@ -1,7 +1,7 @@
 @echo off
-title AIOS v1.1
+title AIOS v1.2
 setlocal EnableDelayedExpansion
-set version=1.1
+set version=1.2
 
 for /f "delims=" %%y in ('date /t') do (
     set fecha=%%y
@@ -23,7 +23,7 @@ pause
 :location
 color 02
 call :logos
-echo ================= UBICABION ACTUAL ================
+echo ================= UBICACION ACTUAL ================
 echo "%CD%"
 echo ===================================================
 echo.
@@ -43,6 +43,7 @@ echo  Ejemplo: C:\Users\%USERNAME%\Desktop
 echo.
 set /p ubicacion=cd 
 echo.
+timeout /nobreak /t 1 >nul
 echo ===================================================
 cd %ubicacion%
 dir
@@ -57,9 +58,10 @@ for /f "delims=" %%h in ('time /t') do (
     set hora_inicio=%%h
 )
 call :logos
-dir
 color 02
+dir
 echo ====================================================================================
+timeout /t 2 >nul
 echo.
 echo                                   INFORMACION                             
 echo.
@@ -75,10 +77,11 @@ echo  Nombre del Equipo: %COMPUTERNAME%
 echo  SuperUsuario: %SystemRoot%
 echo  Arquitectura del Procesador: %PROCESSOR_ARCHITECTURE%
 echo.
-echo  Nombre del archivo: %0%~x0
+echo  Nombre del archivo: %0
 echo  Ubicacion del archivo: %~dp0
 echo.
 echo ====================================================================================
+timeout /t 2 >nul
 echo.
 echo ==============================================================
 echo.
@@ -87,6 +90,8 @@ echo.
 echo ==============================================================
 echo / Seleccione el comando que desea ejecutar a continuacion... /
 echo ==============================================================
+echo /                                                            /
+echo /   [man]   MANUAL DE USO                                    /
 echo /                                                            /
 echo /   [1]   ELIMINAR                                           /
 echo /                                                            /
@@ -107,50 +112,42 @@ echo /                                                            /
 echo ==============================================================
 echo / !fecha_inicio! !hora_inicio! /
 echo --------------------------------
+timeout /nobreak /t 1 >nul
 set /p eleccion=Comando a ejecutar: 
 
 if "!eleccion!"=="" (
     color 04
     cls
-    echo ----------------------------
-    echo   No ingreso ningun numero
-    echo ----------------------------
-    pause
-    goto ECRM
-) else if !eleccion! GTR 7 (
-    color 04
-    cls
-    echo ----------------------------------------------------------------
-    echo    El numero debe ser igual o mayor que cero y menor que ocho
-    echo ----------------------------------------------------------------
-    pause
-    goto ECRM
-) else if !eleccion! LSS 0 (
-    color 04
-    cls
-    echo ----------------------------------------------------------------
-    echo    El numero debe ser igual o mayor que cero y menor que ocho
-    echo ----------------------------------------------------------------
+    echo -----------------------------
+    echo    No ingreso ningun valor
+    echo -----------------------------
     pause
     goto ECRM
 ) else if !eleccion! EQU 1 (
-    call :eliminar_AIOSv02
+    goto eliminar_AIOSv02
 ) else if !eleccion! EQU 2 (
-    call :crear_AIOSv02
+    goto crear_AIOSv02
 ) else if !eleccion! EQU 3 (
-    call :renombrar_AIOSv02
+    goto renombrar_AIOSv02
 ) else if !eleccion! EQU 4 (
-    call :mover_AIOSv02
+    goto mover_AIOSv02
 ) else if !eleccion! EQU 0 (
     goto salir_AIOSv02
 ) else if !eleccion! EQU 5 (
-    call :leer_AIOSv02
+    goto leer_AIOSv02
 ) else if !eleccion! EQU 6 (
-    call :ubicacion_AIOSv02
+    goto ubicacion_AIOSv02
 ) else if !eleccion! EQU 7 (
-    call :ejecucion_AIOSv11
+    goto ejecucion_AIOSv11
+) else if /i "!eleccion!"=="man" (
+    goto manual_AIOSv12
 ) else (
     call :error_AIOSv02
+    echo --------------------------------------------------
+    echo -  El numero no debe ser mayor a 7 ni menor a 0  -
+    echo -  La unica palabra admitida es [man]            -
+    echo --------------------------------------------------
+    pause
     goto ECRM
 )
 
@@ -370,7 +367,8 @@ set /p deelfyf=Elija una opcion:
         call :error_AIOSv02
         goto ECRM
     )
-exit /b
+pause
+goto ECRM
 
 REM 3. Funcion: CREAR ------------------------------------------------------- CREAR
 :crear_AIOSv02
@@ -494,7 +492,8 @@ set /p maakfyf=Elija una opcion:
         call :error_AIOSv02
         goto ECRM
     )
-exit /b
+pause
+goto ECRM
 
 REM 4. Funcion: RENOMBRAR ------------------------------------------------------- RENOMBRAR
 :renombrar_AIOSv02
@@ -521,7 +520,8 @@ if /i "!mainname!"=="AIOSrename" (
     rename !mainname! !newname!
 )
 echo ==========================================================================================
-exit /b
+pause
+goto ECRM
 
 REM 5. Funcion: MOVER ------------------------------------------------------- MOVER
 :mover_AIOSv02
@@ -572,7 +572,8 @@ if /i "!movename!"=="AIOSmove" (
     )
     )
 )
-exit /b
+pause
+goto ECRM
 
 REM 6. Funcion: SALIR ------------------------------------------------------- SALIR
 :salir_AIOSv02
@@ -620,7 +621,8 @@ for /f "delims=" %%l in (!seearch!) do (
     echo  %%l
 )
 echo ===================================================================
-exit /b
+pause
+goto ECRM
 
 REM 8. Funcion: UBICACION ------------------------------------------------------- UBICACION
 :ubicacion_AIOSv02
@@ -639,15 +641,16 @@ echo ========================================================================
     set /p nubi=Elija una opcion: 
     if /i "!nubi!"=="si" (
         goto location
-    ) else if "!nubi!"=="no" (
+    ) else if /i "!nubi!"=="no" (
         goto ECRM
     ) else (
         call :error_AIOSv02
         goto ECRM
     )
-exit /b
+pause
+goto ECRM
 
-REM 9. FUNCION: EJECUCION --------------------------------------------------------EJECUCION
+REM 9. FUNCION: EJECUCION --------------------------------------------------------EJECUCION / TODAVIA EN DESAROLLO. FUNCION NO CULMINADA NI LISTA
 :ejecucion_AIOSv11
 call :logos
 echo ==========================================================================================
@@ -664,13 +667,15 @@ echo    Ingrese el nombre del archivo que desea ejecutar junto con su extension
 echo    - Ejecuta solo comandos de texto -
 echo    [Escriba [AIOSexec] para volver al menu principal]
 set /p aioseje=Nombre: 
-if /i "!aioseje!"=="aiosexec" (
+if /i "!aioseje!"=="AIOSexec" (
     goto ECRM
 )
 for /f "delims=" %%a in ('!aioseje!') do (
     echo %%a
 )
-exit /b
+pause
+goto ECRM
+
 REM 10. FUNCION: AIOS ----------------------------------------------------------------AIOS
 :logos
 cls
@@ -691,3 +696,240 @@ echo  =                                                                         
 echo  ============================================================================================================
 echo.
 exit /b
+
+REM 11. FUNCION: MAN ----------------------------------------------------------------------------- MANUAL / TODAVIA EN DESAROLLO. FUNCION NO CULMINADA NI LISTA
+:manual_AIOSv12
+call :logos
+echo  ============================================================================================================
+echo  ==                                                                                                        ==
+echo  ==                                      MANUAL DE USO DE AIOS                                             ==
+echo  ==                                                                                                        ==
+echo  ============================================================================================================
+echo  /   [i]  Introduccion y conceptos basicos                                                                  /
+echo  /   [p]  Primeros pasos                                                                                    /
+echo  /   [1]  Eliminar                                                                                          /
+echo  /   [2]  Crear                                                                                             /
+echo  /   [3]  Renombrar                                                                                         /
+echo  /   [4]  Mover                                                                                             /
+echo  /   [5]  Leer                                                                                              /
+echo  /   [6]  Ubicacion                                                                                         /
+echo  /   [7]  Ejecutar                                                                                          /
+echo  /   [0]  Salir                                                                                             /
+echo  /   [k]  Palabras clave para volver                                                                        /
+echo  /   [c]  Consejos y advertencias                                                                           /
+echo  /   [n]  Novedades de la version                                                                           /
+echo  /   [v]  Volver al menu principal                                                                          /
+echo  ============================================================================================================
+set /p manual=Elija su opcion: 
+if /i "!manual!"=="i" (
+    echo  -----
+    echo.
+    echo  [i] Introduccion y conceptos basicos
+    echo.
+    echo.
+    echo    Que es: AIOS es una herramienta de consola para gestionar archivos y carpetas desde menus, sin escribir comandos. Es gratuita, de codigo abierto y funciona en Windows.
+    echo.
+    echo    Carpeta actual: es la carpeta donde AIOS trabaja. Todo lo que crees, borres, renombres o leas ocurre ahi. Es el concepto más importante del programa.
+    echo.
+    echo    Ruta y extension: la ruta es la direccion de una carpeta ej.[C:\Users\TuUsuario\Desktop]. La extension es lo que va despues del punto en un archivo [.txt, .bat].
+    echo.
+    echo    Colores: verde significa funcionamiento normal. Rojo significa que ingresaste un valor no valido; pulsas una tecla y vuelves al menu.
+    echo.
+    echo -----
+    pause
+    goto manual_AIOSv12
+) else if /i "!manual!"=="p" (
+    echo  -----
+    echo.
+    echo  [p] Primeros pasos
+    echo.
+    echo.
+    echo    Bienvenida: al abrir AIOS aparecen la version, la fecha y la hora. Pulsa cualquier tecla para continuar.
+    echo.
+    echo    Elegir ubicacion: AIOS muestra la carpeta actual con sus carpetas y archivos. Escribe una ruta completa o el nombre de una subcarpeta. Con .. subes un nivel.
+    echo.
+    echo    Pantalla de informacion: explica qué es cada dato en palabras simples: carpeta actual, carpeta del usuario, sistema operativo, procesadores, nombre de usuario y del equipo, carpeta de Windows, arquitectura, y nombre y ubicacion del archivo de AIOS.
+    echo.
+    echo    Uso del menu: escribe un numero del 0 al 7, o man para el manual, y pulsa Enter.    
+    echo.
+    echo  -----
+    pause
+    goto manual_AIOSv12
+) else if !manual! EQU 1 (
+    echo  -----
+    echo.
+    echo    [1] Eliminar
+    echo.
+    echo.
+    echo    Archivo = uno: escribe el nombre con su extension [ej. notas.txt.]
+    echo.
+    echo    Archivo = varios: borra archivos numerados que comparten nombre. Se piden el nombre base sin extension, la extension con punto y la cantidad. Ejemplo: base foto, extensión .png, cantidad 3 borra foto1.png, foto2.png y foto3.png. La numeración siempre empieza en 1.
+    echo.
+    echo    Carpeta = una: AIOS pregunta si la carpeta tiene contenido. [SI] la borra con todo lo que hay dentro. [NO] solo la borra si esta vacia.
+    echo.
+    echo    Carpeta = varias: mismo patron de nombre base + numero, con la misma pregunta SI/NO.
+    echo.
+    echo    Volver: la opción [3] de cada submenu regresa al menu anterior.
+    echo.
+    echo    Advertencia: el borrado es definitivo. No pasa por la Papelera y AIOS no pide confirmacion.
+    echo.
+    echo  -----
+    pause
+    goto manual_AIOSv12
+) else if !manual! EQU 2 (
+    echo  -----
+    echo.
+    echo    [2] Crear
+    echo.
+    echo.
+    echo    Archivo = uno: escribe el nombre con extension y luego la primera linea de texto. Despues el archivo se abre en el Bloc de notas para seguir escribiendo.
+    echo.
+    echo    Archivo = varios: pide nombre base, extension con punto, una primera linea [la misma para todos] y la cantidad. Crea archivo1.txt, archivo2.txt, etc.
+    echo.
+    echo    Carpeta = una / varias: [varias] usa el mismo patron de nombre base + numero [proyecto1, proyecto2...].
+    echo.
+    echo    Advertencia: si ya existe un archivo con ese nombre, se reemplaza y se pierde su contenido.
+    echo.
+    echo  -----
+    pause
+    goto manual_AIOSv12
+) else if !manual! EQU 3 (
+    echo  -----
+    echo.
+    echo    [3] Renombrar
+    echo.
+    echo.
+    echo    Escribe el nombre actual con extension y luego el nuevo nombre, tambien con extension. Si la omites, el archivo la pierde.
+    echo.
+    echo    Solo cambia el nombre, no la carpeta; para eso existe Mover. Escribe AIOSrename en el primer campo para volver.
+    echo.
+    echo  -----
+    pause
+    goto manual_AIOSv12
+) else if !manual! EQU 4 (
+    echo  -----
+    echo.
+    echo    [4] Mover
+    echo.
+    echo.
+    echo    Escribe el nombre del archivo o carpeta y despues la ruta de destino. AIOSmove funciona en cualquiera de los dos campos.
+    echo.
+    echo    Al terminar, AIOS pregunta pd [quedarte en la carpeta actual] o nd [pasar a la carpeta destino].
+    echo.
+    echo    Consejo: la carpeta destino debe existir. Si no existe, el archivo no entra a ninguna carpeta: se queda donde estaba y toma ese nombre.
+    echo.
+    echo  -----
+    pause
+    goto manual_AIOSv12
+) else if !manual! EQU 5 (
+    echo  -----
+    echo.
+    echo    [5] Leer
+    echo.
+    echo.
+    echo    Escribe el nombre con extension y su contenido se muestra en pantalla. Escribe AIOSread para volver.
+    echo.
+    echo    Sirve para archivos de texto [.txt, .bat, .log, .csv], no para .docx, .pdf, imagenes ni programas.
+    echo.
+    echo  -----
+    pause
+    goto manual_AIOSv12
+) else if !manual! EQU 6 (
+    echo  -----
+    echo.
+    echo    [6] Ubicacion
+    echo.
+    echo    Muestra la carpeta actual. Si respondes [Si], vas a la pantalla para elegir una nueva ubicacion, igual que al inicio. Si respondes [No], vuelves al menu.
+    echo.
+    echo  -----
+    pause
+    goto manual_AIOSv12
+) else if !manual! EQU 7 (
+    echo  -----
+    echo.
+    echo    [7] Ejecutar [en desarrollo]
+    echo.
+    echo    Escribe el nombre del archivo con extension. AIOS lo ejecuta y muestra el texto que produce cuando termina. Escribe AIOSexec para volver.
+    echo.
+    echo    Está pensado para scripts que solo muestran texto. Con programas que piden datos o abren ventanas, AIOS puede parecer congelado.
+    echo.
+    echo  -----
+    pause
+    goto manual_AIOSv12
+) else if !manual! EQU 0 (
+    echo  -----
+    echo.
+    echo    [0] Salir
+    echo.
+    echo    Si cierra AIOS. No, o cualquier otra respuesta, vuelve al menu.
+    echo.
+    echo    Si abriste AIOS desde una ventana de CMD, regresas a esa ventana. Si lo abriste con doble clic, la ventana se cierra.
+    echo.
+    echo  -----
+    pause
+    goto manual_AIOSv12
+) else if /i "!manual!"=="k" (
+    echo  -----
+    echo.
+    echo    [k] Palabras clave para volver
+    echo.
+    echo.
+    echo    Ninguna distingue mayusculas de minusculas.
+    echo.
+    echo    Donde / Escribe
+    echo.
+    echo    Renombrar / AIOSrename
+    echo.
+    echo    Mover / AIOSmove
+    echo.
+    echo    Leer / AIOSread
+    echo.
+    echo    Ejecutar / AIOSexec
+    echo.
+    echo    Eliminar y Crear / opcion [3]
+    echo.
+    echo    Menu principal = manual / man
+    echo.
+    echo  -----
+    pause
+    goto manual_AIOSv12
+) else if /i "!manual!"=="c" (
+    echo  -----
+    echo.
+    echo    [c] Consejos y advertencias
+    echo.
+    echo.
+    echo    Esta seccion reune en un solo lugar lo que mas errores evita:
+    echo.
+    echo    -   Revisa la carpeta actual antes de borrar o crear. Por eso siempre se ponen los archivos y carpetas disponibles en el directorio actual.
+    echo.
+    echo    -   Escribe los archivos con extension, excepto en las opciones de [varios], donde la extension se pide aparte y con punto.
+    echo.
+    echo    -   La numeracion automatica empieza en 1 y no usa ceros [archivo1, no archivo01].
+    echo.
+    echo    -   Borrar es definitivo y crear puede reemplazar archivos existentes.
+    echo.
+    echo  -----
+    pause
+    goto manual_AIOSv12
+) else if /i "!manual!"=="n" (
+    echo  -----
+    echo.
+    echo    [n] Novedades de la version !version!
+    echo.
+    echo.
+    echo    - Arreglo de Bugs: La version 1.1 y anteriores contaban con un error que hacia que el usuario a la hora de salir del programa tuviera que presionar varias veces la opcion de salir.
+    echo    Ahora el bug esta solucionado.
+    echo.
+    echo    - Nueva funcion en desarrollo: La funcion [ejecutar] esta en desarrollo. Trata de ejecutar programas de texto .bat y .txt.
+    echo.
+    echo  -----
+    pause
+    goto manual_AIOSv12
+) else if /i "!manual!"=="v" (
+    goto ECRM
+) else (
+    call :error_AIOSv02
+)
+pause
+goto ECRM
