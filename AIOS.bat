@@ -650,7 +650,7 @@ echo ========================================================================
 pause
 goto ECRM
 
-REM 9. FUNCION: EJECUCION --------------------------------------------------------EJECUCION / TODAVIA EN DESAROLLO. FUNCION NO CULMINADA NI LISTA
+REM 9. FUNCION: EJECUCION --------------------------------------------------------EJECUCION / TODAVIA EN DESAROLLO.
 :ejecucion_AIOSv11
 color 02
 call :logos
