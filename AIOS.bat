@@ -74,7 +74,7 @@ echo  Sistema Operativo: %OS%
 echo  Numero de Procesadores: %NUMBER_OF_PROCESSORS%
 echo  Nombre del usuario: %USERNAME%
 echo  Nombre del Equipo: %COMPUTERNAME%
-echo  SuperUsuario: %SystemRoot%
+echo  Carpeta de Windows: %SystemRoot%
 echo  Arquitectura del Procesador: %PROCESSOR_ARCHITECTURE%
 echo.
 echo  Nombre del archivo: %0
@@ -652,6 +652,7 @@ goto ECRM
 
 REM 9. FUNCION: EJECUCION --------------------------------------------------------EJECUCION / TODAVIA EN DESAROLLO. FUNCION NO CULMINADA NI LISTA
 :ejecucion_AIOSv11
+color 02
 call :logos
 echo ==========================================================================================
 echo /                                   LISTA DE ARCHIVOS                                    /
@@ -663,15 +664,60 @@ echo /                                                                          
 echo /                                       EJECUTAR                                         /
 echo /                                                                                        /
 echo ==========================================================================================
-echo    Ingrese el nombre del archivo que desea ejecutar junto con su extension
-echo    - Ejecuta solo comandos de texto -
-echo    [Escriba [AIOSexec] para volver al menu principal]
-set /p aioseje=Nombre: 
-if /i "!aioseje!"=="AIOSexec" (
+echo    Que desea ejecutar: un programa.exe o un archivo.bat?
+echo.
+echo    [exe] Ejecutar un .exe
+echo.
+echo    [bat] Ejecutar un .bat
+echo.
+echo    [men] Volver al menu
+echo.
+echo ==========================================================================================
+set /p execucion=Elija una opcion: 
+if /i "!execucion!"=="exe" (
+    echo ================================================================
+    echo.
+    echo                  EJECUTAR UN PROGRAMA .exe ...
+    echo.
+    echo  escribir [AIOSexec] para cancelar
+    echo ================================================================
+    set /p ejecutable=Inserte el nombre del programa que desea ejecutar: 
+    if /i "!ejecutable!"=="AIOSexec" (
+        echo Accion cancelada. volviendo...
+        timeout /nobreak /t 3 >nul
+        goto ejecucion_AIOSv11
+    )
+    start !ejecutable!.exe 2>nul
+    pause
+    echo Accion completada. volviendo a la seccion de ejecucion...
+    timeout /nobreak /t 3 >nul
+    goto ejecucion_AIOSv11
+) else if /i "!execucion!"=="bat" (
+    echo ================================================================
+    echo.
+    echo                  EJECUTAR UN ARCHIVO .bat ...
+    echo.
+    echo  escribir [AIOSexec] para cancelar
+    echo ================================================================
+    set /p ejecutado=Inserte el nombre del archivo que desea ejecutar: 
+    if /i "!ejecutado!"=="AIOSexec" (
+        echo Accion cancelada. volviendo...
+        timeout /nobreak /t 3 >nul
+        goto ejecucion_AIOSv11
+    )
+    set ubiexe=%CD%
+    for /f "delims=" %%i in ('"!ubiexe!\!ejecutado!.bat"') do (
+    echo %%i 
+    )
+    pause
+    echo Accion completada. volviendo a la seccion de ejecucion...
+    timeout /nobreak /t 3 >nul
+    goto ejecucion_AIOSv11
+) else if /i "!execucion!"=="men" (
     goto ECRM
-)
-for /f "delims=" %%a in ('!aioseje!') do (
-    echo %%a
+) else (
+    call :error_AIOSv02
+    goto ejecucion_AIOSv11
 )
 pause
 goto ECRM
@@ -699,6 +745,8 @@ exit /b
 
 REM 11. FUNCION: MAN ----------------------------------------------------------------------------- MANUAL / TODAVIA EN DESAROLLO. FUNCION NO CULMINADA NI LISTA
 :manual_AIOSv12
+color 02
+set mandir="%~dp0"manual\
 call :logos
 echo  ============================================================================================================
 echo  ==                                                                                                        ==
@@ -722,214 +770,87 @@ echo  /   [v]  Volver al menu principal                                         
 echo  ============================================================================================================
 set /p manual=Elija su opcion: 
 if /i "!manual!"=="i" (
-    echo  -----
-    echo.
-    echo  [i] Introduccion y conceptos basicos
-    echo.
-    echo.
-    echo    Que es: AIOS es una herramienta de consola para gestionar archivos y carpetas desde menus, sin escribir comandos. Es gratuita, de codigo abierto y funciona en Windows.
-    echo.
-    echo    Carpeta actual: es la carpeta donde AIOS trabaja. Todo lo que crees, borres, renombres o leas ocurre ahi. Es el concepto más importante del programa.
-    echo.
-    echo    Ruta y extension: la ruta es la direccion de una carpeta ej.[C:\Users\TuUsuario\Desktop]. La extension es lo que va despues del punto en un archivo [.txt, .bat].
-    echo.
-    echo    Colores: verde significa funcionamiento normal. Rojo significa que ingresaste un valor no valido; pulsas una tecla y vuelves al menu.
-    echo.
-    echo -----
+    for /f "delims=" %%i in ('"!mandir!introduccion.bat"') do (
+    echo %%i
+    )
     pause
     goto manual_AIOSv12
 ) else if /i "!manual!"=="p" (
-    echo  -----
-    echo.
-    echo  [p] Primeros pasos
-    echo.
-    echo.
-    echo    Bienvenida: al abrir AIOS aparecen la version, la fecha y la hora. Pulsa cualquier tecla para continuar.
-    echo.
-    echo    Elegir ubicacion: AIOS muestra la carpeta actual con sus carpetas y archivos. Escribe una ruta completa o el nombre de una subcarpeta. Con .. subes un nivel.
-    echo.
-    echo    Pantalla de informacion: explica qué es cada dato en palabras simples: carpeta actual, carpeta del usuario, sistema operativo, procesadores, nombre de usuario y del equipo, carpeta de Windows, arquitectura, y nombre y ubicacion del archivo de AIOS.
-    echo.
-    echo    Uso del menu: escribe un numero del 0 al 7, o man para el manual, y pulsa Enter.    
-    echo.
-    echo  -----
+    for /f "delims=" %%i in ('"!mandir!primerospasos.bat"') do (
+    echo %%i
+    )
     pause
     goto manual_AIOSv12
 ) else if !manual! EQU 1 (
-    echo  -----
-    echo.
-    echo    [1] Eliminar
-    echo.
-    echo.
-    echo    Archivo = uno: escribe el nombre con su extension [ej. notas.txt.]
-    echo.
-    echo    Archivo = varios: borra archivos numerados que comparten nombre. Se piden el nombre base sin extension, la extension con punto y la cantidad. Ejemplo: base foto, extensión .png, cantidad 3 borra foto1.png, foto2.png y foto3.png. La numeración siempre empieza en 1.
-    echo.
-    echo    Carpeta = una: AIOS pregunta si la carpeta tiene contenido. [SI] la borra con todo lo que hay dentro. [NO] solo la borra si esta vacia.
-    echo.
-    echo    Carpeta = varias: mismo patron de nombre base + numero, con la misma pregunta SI/NO.
-    echo.
-    echo    Volver: la opción [3] de cada submenu regresa al menu anterior.
-    echo.
-    echo    Advertencia: el borrado es definitivo. No pasa por la Papelera y AIOS no pide confirmacion.
-    echo.
-    echo  -----
+    for /f "delims=" %%i in ('"!mandir!eliminar.bat"') do (
+    echo %%i
+    )
     pause
     goto manual_AIOSv12
 ) else if !manual! EQU 2 (
-    echo  -----
-    echo.
-    echo    [2] Crear
-    echo.
-    echo.
-    echo    Archivo = uno: escribe el nombre con extension y luego la primera linea de texto. Despues el archivo se abre en el Bloc de notas para seguir escribiendo.
-    echo.
-    echo    Archivo = varios: pide nombre base, extension con punto, una primera linea [la misma para todos] y la cantidad. Crea archivo1.txt, archivo2.txt, etc.
-    echo.
-    echo    Carpeta = una / varias: [varias] usa el mismo patron de nombre base + numero [proyecto1, proyecto2...].
-    echo.
-    echo    Advertencia: si ya existe un archivo con ese nombre, se reemplaza y se pierde su contenido.
-    echo.
-    echo  -----
+    for /f "delims=" %%i in ('"!mandir!crear.bat"') do (
+    echo %%i
+    )
     pause
     goto manual_AIOSv12
 ) else if !manual! EQU 3 (
-    echo  -----
-    echo.
-    echo    [3] Renombrar
-    echo.
-    echo.
-    echo    Escribe el nombre actual con extension y luego el nuevo nombre, tambien con extension. Si la omites, el archivo la pierde.
-    echo.
-    echo    Solo cambia el nombre, no la carpeta; para eso existe Mover. Escribe AIOSrename en el primer campo para volver.
-    echo.
-    echo  -----
+    for /f "delims=" %%i in ('"!mandir!renombrar.bat"') do (
+    echo %%i
+    )
     pause
     goto manual_AIOSv12
 ) else if !manual! EQU 4 (
-    echo  -----
-    echo.
-    echo    [4] Mover
-    echo.
-    echo.
-    echo    Escribe el nombre del archivo o carpeta y despues la ruta de destino. AIOSmove funciona en cualquiera de los dos campos.
-    echo.
-    echo    Al terminar, AIOS pregunta pd [quedarte en la carpeta actual] o nd [pasar a la carpeta destino].
-    echo.
-    echo    Consejo: la carpeta destino debe existir. Si no existe, el archivo no entra a ninguna carpeta: se queda donde estaba y toma ese nombre.
-    echo.
-    echo  -----
+    for /f "delims=" %%i in ('"!mandir!mover.bat"') do (
+    echo %%i
+    )
     pause
     goto manual_AIOSv12
 ) else if !manual! EQU 5 (
-    echo  -----
-    echo.
-    echo    [5] Leer
-    echo.
-    echo.
-    echo    Escribe el nombre con extension y su contenido se muestra en pantalla. Escribe AIOSread para volver.
-    echo.
-    echo    Sirve para archivos de texto [.txt, .bat, .log, .csv], no para .docx, .pdf, imagenes ni programas.
-    echo.
-    echo  -----
+    for /f "delims=" %%i in ('"!mandir!leer.bat"') do (
+    echo %%i
+    )
     pause
     goto manual_AIOSv12
 ) else if !manual! EQU 6 (
-    echo  -----
-    echo.
-    echo    [6] Ubicacion
-    echo.
-    echo    Muestra la carpeta actual. Si respondes [Si], vas a la pantalla para elegir una nueva ubicacion, igual que al inicio. Si respondes [No], vuelves al menu.
-    echo.
-    echo  -----
+    for /f "delims=" %%i in ('"!mandir!ubicacion.bat"') do (
+    echo %%i
+    )
     pause
     goto manual_AIOSv12
 ) else if !manual! EQU 7 (
-    echo  -----
-    echo.
-    echo    [7] Ejecutar [en desarrollo]
-    echo.
-    echo    Escribe el nombre del archivo con extension. AIOS lo ejecuta y muestra el texto que produce cuando termina. Escribe AIOSexec para volver.
-    echo.
-    echo    Está pensado para scripts que solo muestran texto. Con programas que piden datos o abren ventanas, AIOS puede parecer congelado.
-    echo.
-    echo  -----
+    for /f "delims=" %%i in ('"!mandir!ejecutar.bat"') do (
+    echo %%i
+    )
     pause
     goto manual_AIOSv12
 ) else if !manual! EQU 0 (
-    echo  -----
-    echo.
-    echo    [0] Salir
-    echo.
-    echo    Si cierra AIOS. No, o cualquier otra respuesta, vuelve al menu.
-    echo.
-    echo    Si abriste AIOS desde una ventana de CMD, regresas a esa ventana. Si lo abriste con doble clic, la ventana se cierra.
-    echo.
-    echo  -----
+    for /f "delims=" %%i in ('"!mandir!salir.bat"') do (
+    echo %%i
+    )
     pause
     goto manual_AIOSv12
 ) else if /i "!manual!"=="k" (
-    echo  -----
-    echo.
-    echo    [k] Palabras clave para volver
-    echo.
-    echo.
-    echo    Ninguna distingue mayusculas de minusculas.
-    echo.
-    echo    Donde / Escribe
-    echo.
-    echo    Renombrar / AIOSrename
-    echo.
-    echo    Mover / AIOSmove
-    echo.
-    echo    Leer / AIOSread
-    echo.
-    echo    Ejecutar / AIOSexec
-    echo.
-    echo    Eliminar y Crear / opcion [3]
-    echo.
-    echo    Menu principal = manual / man
-    echo.
-    echo  -----
+    for /f "delims=" %%i in ('"!mandir!palabrasclave.bat"') do (
+    echo %%i
+    )
     pause
     goto manual_AIOSv12
 ) else if /i "!manual!"=="c" (
-    echo  -----
-    echo.
-    echo    [c] Consejos y advertencias
-    echo.
-    echo.
-    echo    Esta seccion reune en un solo lugar lo que mas errores evita:
-    echo.
-    echo    -   Revisa la carpeta actual antes de borrar o crear. Por eso siempre se ponen los archivos y carpetas disponibles en el directorio actual.
-    echo.
-    echo    -   Escribe los archivos con extension, excepto en las opciones de [varios], donde la extension se pide aparte y con punto.
-    echo.
-    echo    -   La numeracion automatica empieza en 1 y no usa ceros [archivo1, no archivo01].
-    echo.
-    echo    -   Borrar es definitivo y crear puede reemplazar archivos existentes.
-    echo.
-    echo  -----
+    for /f "delims=" %%i in ('"!mandir!consejos.bat"') do (
+    echo %%i
+    )
     pause
     goto manual_AIOSv12
 ) else if /i "!manual!"=="n" (
-    echo  -----
-    echo.
-    echo    [n] Novedades de la version !version!
-    echo.
-    echo.
-    echo    - Arreglo de Bugs: La version 1.1 y anteriores contaban con un error que hacia que el usuario a la hora de salir del programa tuviera que presionar varias veces la opcion de salir.
-    echo    Ahora el bug esta solucionado.
-    echo.
-    echo    - Nueva funcion en desarrollo: La funcion [ejecutar] esta en desarrollo. Trata de ejecutar programas de texto .bat y .txt.
-    echo.
-    echo  -----
+    for /f "delims=" %%i in ('"!mandir!nuevasversiones.bat"') do (
+    echo %%i
+    )
     pause
     goto manual_AIOSv12
 ) else if /i "!manual!"=="v" (
     goto ECRM
 ) else (
     call :error_AIOSv02
+    goto manual_AIOSv12
 )
-pause
 goto ECRM
